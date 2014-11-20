@@ -99,7 +99,6 @@ if __name__ == '__main__':
     print("________________________________________________________________________________")
     print("                                InstaFrame")
 
-    exit()
 
     # fetching input folder
     inputFolder=findArgValue("-input")
