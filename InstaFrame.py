@@ -49,19 +49,19 @@ def findArgValue(argName, mandatory=True):
 
 
 def printInfo():
-    print("\nInstaFrame needs at least the address of input folder.")
-    print("This folder must contain jpg or png images.")
-    print("You can also specify margin color")
+    print("\nInstaFrame makes your pictures square-shaped by adding margin, not by croping.")
+    print("\nInstaFrame needs an input folder, containing jpg and/or png images.")
     print("\t-input <folder>\t(mandatory)")
-    print("\t-color <color>\t(default: FFFFFF)")
-    print("An InstaFramed subdirectory will be created, containing outputs.\n")
+    print("\t-color <hexadecimal color>\t(optional, default: FFFFFF)")
+    print("\t-size <size in pixel>\t(optional, default: largest from width or height of each file)")
+    print("An \"InstaFramed\" subdirectory will be created, containing outputs.\n")
 
 
 
 
 # open the input, create a white file, paste at the right position
 # and save the image
-def frameAndSave(inputFile, outputFile, BackgroundColor):
+def frameAndSave(inputFile, outputFile, BackgroundColor, size=-1):
 
     # open image
     inputData = Image.open(inputFile)
@@ -87,9 +87,15 @@ def frameAndSave(inputFile, outputFile, BackgroundColor):
         xOriginWithinOutput = (biggestSide - smallestSide)/2
 
 
-    # pasting and saving file
+    # pasting cotent to output
     outputData.paste(inputData, (xOriginWithinOutput, yOriginWithinOutput))
-    outputData.save(outputFile, "JPEG")
+    
+    # Resizing if needed
+    if(size != -1):
+	    outputData = outputData.resize((size, size), Image.ANTIALIAS)
+
+    # Save file
+    outputData.save(outputFile, "JPEG", quality=90)
 
 
 
@@ -103,15 +109,23 @@ if __name__ == '__main__':
     # fetching input folder
     inputFolder=findArgValue("-input")
 
-    # fetching the color, if specified
+    # fetching the color (optional)
     color = findArgValue("-color", False) or "FFF"
     color = "#" + str(color)
+
+    # Fetching the output size (optional)
+    try:
+        size = max(int(findArgValue("-size", False)), -1)
+    except:
+        size = -1
 
     # existance of it
     if(not os.path.exists(inputFolder)):
         print("ERROR: The input folder must exist.")
         exit()
 
+    # Adding the file separator, in cae it was forgotten
+    inputFolder = inputFolder + os.sep
 
     # making a list of all files from this folder
     imageTypes = ('*.jpg', '*.JPG', '*.jpeg', '*.JPEG', '*.png', '*.PNG', '*.tif', '*.TIF', '*.tiff', '*.TIFF', '*.bmp', '*.BMP')
@@ -137,7 +151,7 @@ if __name__ == '__main__':
         frameImageFile = subdir + imageBasename
         print("\t" + imageBasename + "\t..."),
 
-        frameAndSave(img, frameImageFile, color)
+        frameAndSave(img, frameImageFile, color, size)
 
         print("\tDONE")
 
