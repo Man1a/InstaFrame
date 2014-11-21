@@ -12,17 +12,24 @@ in a terminal, go to the directory that contains InstaFrame.py, and then:
 ./InstaFrame.py -input /yourFoderFullOfImages/
 ```
 
-I guess you can just whrite
+I guess you can just write
 ```
 ./InstaFrame.py -input
 ```
 and then drop a folder from GUI to terminal if you don't want to bother typing the whole address.
 
 
-By default, the border color is white, but you can change it (here, red)
+By default, the border color is white, but you can change it (here, red):
 ```
 ./InstaFrame.py -input /yourFoderFullOfImages/ -color FF0000
 ```
+
+And by default, the output size is the biggest (width or height) of each image, but you can tune it (here 1000):
+```
+./InstaFrame.py -input /yourFoderFullOfImages/ -size 1000
+```
+
+Note: the jpeg quality of output images is hard coded at 90%. It seemed pretty useless to make an parameter for that.
 
 Then it creates a subdirectory __InstaFramed__ (so /yourFoderFullOfImages/InstaFramed/) containing all the framed images with their real names.
 
